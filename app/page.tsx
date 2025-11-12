@@ -1,9 +1,10 @@
-import HeroSection from "@/components/landing-page/hero-section";
-import { Button } from "@/components/ui/button";
+import HeroSection from "@/components/pages/landing-page/hero-section";
+import { FloatingNavbar } from "@/components/layout/navbar";
 
 export default function Home() {
   return (
     <>
+      <FloatingNavbar />
       <HeroSection />
     </>
   );
