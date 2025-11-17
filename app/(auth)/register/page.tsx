@@ -15,11 +15,13 @@ import {
 import { FloatingInput } from "@/components/ui/floating-input";
 import GithubButton from "@/components/pages/auth/github-button";
 import GoogleButton from "@/components/pages/auth/google-button";
+import { useSignUpForm } from "@/hooks/useAuthForm";
 
 export default function SignupPage() {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const { register, errors, isSubmitting, onSubmit, handleSubmit } =
+    useSignUpForm();
 
   return (
     <div>
@@ -30,17 +32,21 @@ export default function SignupPage() {
         </p>
       </div>
 
-      <form className="space-y-4">
+      <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
         <FloatingInput
           label="Full Name"
           type="text"
           leftItem={<User className="w-4 h-4" />}
+          {...register("name")}
+          error={errors?.name?.message}
         />
 
         <FloatingInput
           label="Email Address"
           type="email"
           leftItem={<Mail className="w-4 h-4" />}
+          {...register("email")}
+          error={errors?.email?.message}
         />
 
         <FloatingInput
@@ -60,11 +66,14 @@ export default function SignupPage() {
               )}
             </button>
           }
+          {...register("password")}
+          error={errors?.password?.message}
         />
 
         <FloatingInput
           label="Confirm Password"
           type={confirmPasswordVisible ? "text" : "password"}
+          {...register("confirmPassword")}
           leftItem={<Lock className="w-4 h-4" />}
           rightItem={
             <button
@@ -79,17 +88,18 @@ export default function SignupPage() {
               )}
             </button>
           }
+          error={errors?.confirmPassword?.message}
         />
 
         <Button
           className="w-full rounded-full mt-4"
-          disabled={isLoading}
-          onClick={() => setIsLoading(true)}
+          disabled={isSubmitting}
+          type="submit"
         >
-          {isLoading ? (
+          {isSubmitting ? (
             <>
               <Loader2 className="w-4 h-4 animate-spin" />
-              <span className="sr-only">Loading...</span>
+              <span className="sr-only">Signing You Up...</span>
             </>
           ) : (
             <>
