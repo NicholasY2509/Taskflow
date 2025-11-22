@@ -9,7 +9,6 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
       <div className="relative z-10 w-full sm:w-1/2 min-h-screen sm:rounded-r-3xl sm:shadow-xl bg-white/70 backdrop-blur-xl border border-white/40 flex flex-col items-center justify-center">
         <div className="max-w-md w-full p-4">{children}</div>
       </div>
-      {/* Background animation area - hidden on mobile, shown on larger screens */}
       <div className="hidden sm:relative sm:flex-1 sm:flex sm:items-center sm:justify-center sm:overflow-hidden">
         <motion.div
           className="absolute top-10 left-20 w-96 h-96 rounded-full bg-blue-400/20 blur-3xl"

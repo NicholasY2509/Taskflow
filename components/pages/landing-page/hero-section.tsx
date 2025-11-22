@@ -2,13 +2,15 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
+import { GetStartedButton } from "./get-started-button";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import { GetStartedButton } from "./get-started-button";
+import { useRouter } from "next/navigation";
 
 export default function HeroSection() {
   const words = ["Teams", "Projects", "Automation", "Productivity"];
   const [index, setIndex] = useState(0);
+  const router = useRouter();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -62,7 +64,14 @@ export default function HeroSection() {
           automating workflows.
         </p>
 
-        <GetStartedButton />
+        <Button
+          size="lg"
+          onClick={() => router.push("/login")}
+          className="rounded-full px-8 py-6 text-base shadow-lg"
+        >
+          Get Started
+          <ArrowRight className="ml-1 h-4 w-4" />
+        </Button>
       </div>
     </section>
   );

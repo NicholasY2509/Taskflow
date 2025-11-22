@@ -20,8 +20,29 @@ import { useSignUpForm } from "@/hooks/useAuthForm";
 export default function SignupPage() {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
-  const { register, errors, isSubmitting, onSubmit, handleSubmit } =
+  const { register, errors, isSubmitting, onSubmit, handleSubmit, success } =
     useSignUpForm();
+
+  if (success) {
+    return (
+      <div className="flex flex-col items-center justify-center text-center space-y-4 mb-7">
+        <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-2">
+          <Mail className="w-6 h-6 text-primary " />
+        </div>
+        <h1 className="text-2xl text-primary font-bold  ">Check your email</h1>
+        <p className="text-gray-600 max-w-sm">
+          We&apos;ve sent you a confirmation link. Please check your email to verify your account.
+        </p>
+        <Button
+          variant="outline"
+          className="w-full rounded-full mt-4"
+          onClick={() => window.location.reload()}
+        >
+          Back to Sign Up
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div>

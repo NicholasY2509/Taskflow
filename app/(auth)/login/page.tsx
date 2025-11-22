@@ -7,10 +7,13 @@ import { FloatingInput } from "@/components/ui/floating-input";
 import { useState } from "react";
 import GoogleButton from "@/components/pages/auth/google-button";
 import GithubButton from "@/components/pages/auth/github-button";
+import { useLoginForm } from "@/hooks/useAuthForm";
 
 export default function LoginPage() {
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const { register, errors, isSubmitting, onSubmit, handleSubmit } =
+    useLoginForm();
+
 
   return (
     <div>
@@ -19,11 +22,13 @@ export default function LoginPage() {
         <p className="text-sm text-gray-600">We’re happy to see you again</p>
       </div>
 
-      <form className="space-y-4">
+      <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
         <FloatingInput
           label="Email Address"
           type="email"
           leftItem={<Mail className="w-4 h-4" />}
+          {...register("email")}
+          error={errors?.email?.message}
         />
 
         <FloatingInput
@@ -43,14 +48,15 @@ export default function LoginPage() {
               )}
             </button>
           }
+          {...register("password")}
+          error={errors?.password?.message}
         />
 
         <Button
           className="w-full rounded-full mt-4"
-          disabled={isLoading}
-          onClick={() => setIsLoading(true)}
+          disabled={isSubmitting}
         >
-          {isLoading ? (
+          {isSubmitting ? (
             <>
               <Loader2 className="w-4 h-4 animate-spin" />
               Signing In...
