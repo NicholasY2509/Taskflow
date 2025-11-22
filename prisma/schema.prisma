@@ -14,21 +14,180 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-model Profile {
-  id        String   @id @db.Uuid
-  email     String   @unique
-  name      String?
-  avatarUrl String?
-  roleId    String
-  role      Role     @relation(fields: [roleId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-
-  @@index([email])
+enum Role {
+  ADMIN
+  MANAGER
+  STAFF
+  CLIENT
 }
 
-model Role {
-  id       String    @id
-  name     String    @unique
-  profiles Profile[]
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  REVIEW
+  DONE
+  BLOCKED
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+// ==============================
+// USERS (linked to Supabase user)
+// ==============================
+
+model User {
+  id        String  @id @default(cuid())
+  authId    String  @unique // Supabase auth.users.id (UUID)
+  email     String  @unique
+  name      String
+  avatarUrl String?
+
+  role Role @default(STAFF)
+
+  // Relations
+  projectsOwned Project[]     @relation("ProjectOwner")
+  tasksAssigned Task[]        @relation("TaskAssignee")
+  comments      Comment[]
+  activityLogs  ActivityLog[]
+  teams         TeamMember[]
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  taskFiles TaskFile[]
+}
+
+// ==============================
+// TEAMS
+// ==============================
+
+model Team {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+
+  members  TeamMember[]
+  projects Project[]
+}
+
+model TeamMember {
+  id     String @id @default(cuid())
+  userId String
+  teamId String
+  role   Role   @default(STAFF)
+
+  user User @relation(fields: [userId], references: [id])
+  team Team @relation(fields: [teamId], references: [id])
+
+  @@unique([userId, teamId])
+}
+
+// ==============================
+// PROJECTS
+// ==============================
+
+model Project {
+  id          String  @id @default(cuid())
+  name        String
+  description String?
+  status      String  @default("ACTIVE")
+
+  ownerId String
+  owner   User   @relation("ProjectOwner", fields: [ownerId], references: [id])
+
+  teamId String?
+  team   Team?   @relation(fields: [teamId], references: [id])
+
+  tasks        Task[]
+  activityLogs ActivityLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ==============================
+// TASKS
+// ==============================
+
+model Task {
+  id          String  @id @default(cuid())
+  title       String
+  description String?
+
+  status   TaskStatus @default(TODO)
+  priority Priority   @default(MEDIUM)
+  dueDate  DateTime?
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id])
+
+  assigneeId String?
+  assignee   User?   @relation("TaskAssignee", fields: [assigneeId], references: [id])
+
+  comments     Comment[]
+  files        TaskFile[]
+  activityLogs ActivityLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ==============================
+// COMMENTS
+// ==============================
+
+model Comment {
+  id      String @id @default(cuid())
+  content String
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  taskId String
+  task   Task   @relation(fields: [taskId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+// ==============================
+// TASK FILES
+// ==============================
+
+model TaskFile {
+  id   String @id @default(cuid())
+  url  String
+  name String
+  size Int
+
+  taskId String
+  task   Task   @relation(fields: [taskId], references: [id])
+
+  uploadedById String
+  uploadedBy   User   @relation(fields: [uploadedById], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+// ==============================
+// ACTIVITY LOGS
+// ==============================
+
+model ActivityLog {
+  id        String   @id @default(cuid())
+  action    String
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+
+  projectId String?
+  project   Project? @relation(fields: [projectId], references: [id])
+
+  taskId String?
+  task   Task?   @relation(fields: [taskId], references: [id])
 }
