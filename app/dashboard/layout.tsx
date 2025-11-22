@@ -1,18 +1,23 @@
-import { Sidebar } from "@/components/sidebar";
+import AppLayoutTemplate from "@/components/layout/app-layout-template";
+import { BreadcrumbItem } from "@/types/layout";
+import { Separator } from "@radix-ui/react-separator";
 
 export default function DashboardLayout({
     children,
+    breadcrumbs,
+    ...props
 }: {
     children: React.ReactNode;
+    breadcrumbs?: BreadcrumbItem[];
 }) {
     return (
-        <div className="flex min-h-screen">
-            <Sidebar />
-            <main className="flex-1 md:pl-72">
-                <div className="container py-6 md:py-8 px-4 md:px-8">
-                    {children}
-                </div>
-            </main>
-        </div>
+        <AppLayoutTemplate
+            breadcrumbs={breadcrumbs}
+            {...props}
+        >
+            <div className="p-4">
+                {children}
+            </div>
+        </AppLayoutTemplate>
     );
 }
