@@ -7,6 +7,9 @@ import {
     CreditCard,
     LogOut,
     Sparkles,
+    Moon,
+    Sun,
+    Monitor,
 } from "lucide-react"
 
 import {
@@ -22,6 +25,9 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
     SidebarMenu,
@@ -32,6 +38,7 @@ import {
 import { User } from "@/types/user"
 import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
+import { useTheme } from "next-themes"
 
 export function NavUser({
     user,
@@ -41,6 +48,7 @@ export function NavUser({
     const { isMobile } = useSidebar()
     const router = useRouter()
     const supabase = createClient()
+    const { theme, setTheme } = useTheme()
 
     const handleLogout = async () => {
         await supabase.auth.signOut()
@@ -85,6 +93,29 @@ export function NavUser({
                                 </div>
                             </div>
                         </DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuGroup>
+                            <DropdownMenuSub>
+                                <DropdownMenuSubTrigger>
+                                    {theme === "light" ? <Sun className="h-4 w-4" /> : theme === "dark" ? <Moon className="h-4 w-4" /> : <Monitor className="h-4 w-4" />}
+                                    Theme
+                                </DropdownMenuSubTrigger>
+                                <DropdownMenuSubContent>
+                                    <DropdownMenuItem onClick={() => setTheme("light")}>
+                                        <Sun className="h-4 w-4" />
+                                        Light
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => setTheme("dark")}>
+                                        <Moon className="h-4 w-4" />
+                                        Dark
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => setTheme("system")}>
+                                        <Monitor className="h-4 w-4" />
+                                        System
+                                    </DropdownMenuItem>
+                                </DropdownMenuSubContent>
+                            </DropdownMenuSub>
+                        </DropdownMenuGroup>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={handleLogout}>
                             <LogOut />

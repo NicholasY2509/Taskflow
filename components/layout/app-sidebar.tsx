@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { GalleryVerticalEnd } from "lucide-react"
+import { FolderArchive, FolderKanban, GalleryVertical, GalleryVerticalEnd, LayoutDashboard, ListTodo, ScrollText, Settings2, UserSquare2 } from "lucide-react"
 
 import {
     Sidebar,
@@ -20,22 +20,54 @@ import { NavUser } from "./nav-user"
 import { createClient } from "@/lib/supabase/client"
 import { User } from "@/types/user"
 import { useEffect } from "react"
+import { NavItem } from "@/types/layout"
+import { NavMain } from "./nav-main"
 
-const navMain = [
+const navMain: NavItem[] = [
     {
-        title: "Getting Started",
-        url: "#",
-        items: [
-            {
-                title: "Installation",
-                url: "#",
-            },
-            {
-                title: "Project Structure",
-                url: "#",
-            },
-        ],
+        title: "Dashboard",
+        href: "/dashboard",
+        icon: LayoutDashboard,
     },
+    {
+        title: 'Projects',
+        href: '#',
+        icon: FolderKanban
+    },
+    {
+        title: 'Tasks',
+        href: '#',
+        icon: ListTodo,
+    },
+    {
+        title: 'Teams',
+        href: '#',
+        icon: UserSquare2,
+    },
+    {
+        title: 'Activity Logs',
+        href: '#',
+        icon: ScrollText,
+    },
+    {
+        title: "Settings",
+        href: "#",
+        icon: Settings2,
+        children: [
+            {
+                title: "Users",
+                href: "#",
+            },
+            {
+                title: "Roles",
+                href: "#",
+            },
+            {
+                title: "Permission",
+                href: "#",
+            },
+        ]
+    }
 ]
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -58,7 +90,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         fetchUser()
     }, [supabase])
     return (
-        <Sidebar variant="floating" {...props}>
+        <Sidebar collapsible="icon" {...props}>
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
@@ -77,30 +109,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 </SidebarMenu>
             </SidebarHeader>
             <SidebarContent>
-                <SidebarGroup>
-                    <SidebarMenu className="gap-2">
-                        {navMain.map((item) => (
-                            <SidebarMenuItem key={item.title}>
-                                <SidebarMenuButton asChild>
-                                    <a href={item.url} className="font-medium">
-                                        {item.title}
-                                    </a>
-                                </SidebarMenuButton>
-                                {item.items?.length ? (
-                                    <SidebarMenuSub className="ml-0 border-l-0 px-1.5">
-                                        {item.items.map((item) => (
-                                            <SidebarMenuSubItem key={item.title}>
-                                                <SidebarMenuSubButton asChild>
-                                                    <a href={item.url}>{item.title}</a>
-                                                </SidebarMenuSubButton>
-                                            </SidebarMenuSubItem>
-                                        ))}
-                                    </SidebarMenuSub>
-                                ) : null}
-                            </SidebarMenuItem>
-                        ))}
-                    </SidebarMenu>
-                </SidebarGroup>
+                <NavMain items={navMain} />
             </SidebarContent>
             <SidebarFooter>
                 {user && <NavUser user={user} />}
