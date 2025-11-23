@@ -37,7 +37,7 @@ const navMain: NavItem[] = [
     },
     {
         title: 'Teams',
-        href: '#',
+        href: '/teams',
         icon: UserSquare2,
     },
     {
