@@ -16,8 +16,10 @@ import { FloatingInput } from "@/components/ui/floating-input";
 import GithubButton from "@/components/pages/auth/github-button";
 import GoogleButton from "@/components/pages/auth/google-button";
 import { useSignUpForm } from "@/hooks/useAuthForm";
+import { useRouter } from "next/navigation";
 
 export default function SignupPage() {
+  const router = useRouter();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
   const { register, errors, isSubmitting, onSubmit, handleSubmit, success } =
@@ -36,7 +38,7 @@ export default function SignupPage() {
         <Button
           variant="outline"
           className="w-full rounded-full mt-4"
-          onClick={() => window.location.reload()}
+          onClick={() => router.push('/login')}
         >
           Back to Sign Up
         </Button>

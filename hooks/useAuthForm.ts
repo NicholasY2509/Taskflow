@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useState } from "react";
+import { signupAction } from "@/modules/auth/auth.action";
 
 const useLoginForm = () => {
   const router = useRouter();
@@ -49,9 +50,8 @@ const useLoginForm = () => {
 }
 
 const useSignUpForm = () => {
-  const router = useRouter();
-  const supabase = createClient();
   const [success, setSuccess] = useState(false);
+  const router = useRouter();
 
   const {
     register,
@@ -62,36 +62,29 @@ const useSignUpForm = () => {
     resolver: zodResolver(registerSchema),
   });
 
-  const onSubmit = async (validatedData: RegisterFormData) => {
-    try {
-      const { error } = await supabase.auth.signUp({
-        email: validatedData.email,
-        password: validatedData.password,
-        options: {
-          data: { name: validatedData.name, confirmation_sent_at: Date.now(), confirmed_at: Date.now() },
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
-        },
+  const onSubmit = async (formData: RegisterFormData) => {
+    const result = await signupAction(formData);
+
+    if (result?.error) {
+      Object.entries(result.error).forEach(([key, value]) => {
+        setError(key as any, { type: "server", message: String(value) });
       });
 
-      if (error) {
-        setError("root", {
-          type: "manual",
-          message: error.message,
-        });
-        return;
-      }
-
-      setSuccess(true);
-    } catch (error) {
-      console.error("Sign up error:", error);
-      setError("root", {
-        type: "manual",
-        message: "Sign up failed. Please try again later.",
-      });
+      return;
     }
+
+    toast.success("Signup successful! Check your email to verify.");
+    router.push("/dashboard");
   };
 
-  return { register, errors, isSubmitting, onSubmit, handleSubmit, success };
+  return {
+    register,
+    errors,
+    isSubmitting,
+    handleSubmit,
+    onSubmit,
+    success,
+  };
 };
 
 export { useSignUpForm, useLoginForm };

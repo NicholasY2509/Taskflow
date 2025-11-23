@@ -94,7 +94,7 @@ export function NavUser({
                             </div>
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuGroup>
+                        {/* <DropdownMenuGroup>
                             <DropdownMenuSub>
                                 <DropdownMenuSubTrigger>
                                     {theme === "light" ? <Sun className="h-4 w-4" /> : theme === "dark" ? <Moon className="h-4 w-4" /> : <Monitor className="h-4 w-4" />}
@@ -116,7 +116,7 @@ export function NavUser({
                                 </DropdownMenuSubContent>
                             </DropdownMenuSub>
                         </DropdownMenuGroup>
-                        <DropdownMenuSeparator />
+                        <DropdownMenuSeparator /> */}
                         <DropdownMenuItem onClick={handleLogout}>
                             <LogOut />
                             Log out

@@ -1,20 +1,16 @@
 "use client"
 
 import * as React from "react"
-import { FolderArchive, FolderKanban, GalleryVertical, GalleryVerticalEnd, LayoutDashboard, ListTodo, ScrollText, Settings2, UserSquare2 } from "lucide-react"
+import { FolderArchive, FolderKanban, GalleryVertical, GalleryVerticalEnd, LayoutDashboard, ListTodo, ScrollText, Settings2, UserCog, UserSquare2 } from "lucide-react"
 
 import {
     Sidebar,
     SidebarContent,
     SidebarFooter,
-    SidebarGroup,
     SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-    SidebarMenuSub,
-    SidebarMenuSubButton,
-    SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
 import { NavUser } from "./nav-user"
 import { createClient } from "@/lib/supabase/client"
@@ -50,23 +46,9 @@ const navMain: NavItem[] = [
         icon: ScrollText,
     },
     {
-        title: "Settings",
+        title: "User Settings",
         href: "#",
-        icon: Settings2,
-        children: [
-            {
-                title: "Users",
-                href: "#",
-            },
-            {
-                title: "Roles",
-                href: "#",
-            },
-            {
-                title: "Permission",
-                href: "#",
-            },
-        ]
+        icon: UserCog
     }
 ]
 

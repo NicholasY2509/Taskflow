@@ -47,8 +47,6 @@ model User {
   name      String
   avatarUrl String?
 
-  role Role @default(STAFF)
-
   // Relations
   projectsOwned Project[]     @relation("ProjectOwner")
   tasksAssigned Task[]        @relation("TaskAssignee")
