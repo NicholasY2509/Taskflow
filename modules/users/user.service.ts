@@ -17,3 +17,9 @@ export async function createUserService({ authId, email, name }: {
         data: { authId, email, name },
     });
 }
+
+export async function getUserByAuthId(authId: string) {
+    return prisma.user.findUnique({
+        where: { authId },
+    });
+}

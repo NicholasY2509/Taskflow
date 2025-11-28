@@ -1,19 +1,13 @@
 import "dotenv/config";
-import { defineConfig, env } from "prisma/config";
-
-type Env = {
-  DATABASE_URL: string;
-  DIRECT_URL: string;
-};
+import { defineConfig } from "prisma/config";
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
   migrations: {
     path: "prisma/migrations",
   },
-  engine: "classic",
   datasource: {
-    url: env<Env>("DATABASE_URL"),
-    directUrl: env<Env>("DIRECT_URL"),
+    // Use DIRECT_URL for migrations (non-pooled connection)
+    url: process.env.DIRECT_URL!,
   },
 });

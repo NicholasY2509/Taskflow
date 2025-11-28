@@ -5,13 +5,12 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "./generated"
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
 }
 
 enum Role {
@@ -54,9 +53,10 @@ model User {
   activityLogs  ActivityLog[]
   teams         TeamMember[]
 
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  taskFiles TaskFile[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  taskFiles       TaskFile[]
+  teamInvitations TeamInvitation[]
 }
 
 // ==============================
@@ -64,12 +64,14 @@ model User {
 // ==============================
 
 model Team {
-  id        String   @id @default(cuid())
-  name      String
-  createdAt DateTime @default(now())
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
 
-  members  TeamMember[]
-  projects Project[]
+  members         TeamMember[]
+  projects        Project[]
+  teamInvitations TeamInvitation[]
 }
 
 model TeamMember {
@@ -82,6 +84,24 @@ model TeamMember {
   team Team @relation(fields: [teamId], references: [id])
 
   @@unique([userId, teamId])
+}
+
+model TeamInvitation {
+  id    String @id @default(cuid())
+  email String
+  token String @unique
+  role  Role   @default(STAFF)
+
+  teamId String
+  team   Team   @relation(fields: [teamId], references: [id])
+
+  inviterId String
+  inviter   User   @relation(fields: [inviterId], references: [id])
+
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@unique([teamId, email])
 }
 
 // ==============================
