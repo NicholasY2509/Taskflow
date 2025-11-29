@@ -4,10 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, Search } from "lucide-react";
 import TeamFormModal from "@/components/pages/teams/team-form-modal";
-import { TeamsProvider, useTeams } from "./teams-context";
+import { useTeams } from "./teams-context";
 import { ReactNode } from "react";
 
-function TeamsViewContent({ children }: { children: ReactNode }) {
+export default function TeamsView({ children }: { children: ReactNode }) {
     const { isFormOpen, closeModal, editingTeam, openCreateModal } = useTeams();
 
     return (
@@ -49,13 +49,5 @@ function TeamsViewContent({ children }: { children: ReactNode }) {
                 } : undefined}
             />
         </>
-    );
-}
-
-export default function TeamsView({ children }: { children: ReactNode }) {
-    return (
-        <TeamsProvider>
-            <TeamsViewContent>{children}</TeamsViewContent>
-        </TeamsProvider>
     );
 }

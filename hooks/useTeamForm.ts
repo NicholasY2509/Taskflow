@@ -48,13 +48,14 @@ export const useTeamForm = ({ onSuccess }: { onSuccess?: () => void } = {}) => {
     };
 }
 
-export const useUpdateTeamForm = (teamId: string, initialData?: Partial<UpdateTeamFormData>) => {
+export const useUpdateTeamForm = (teamId: string, initialData?: Partial<UpdateTeamFormData>, onSuccess?: () => void) => {
     const {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
         setError,
         setValue,
+        reset
     } = useForm<UpdateTeamFormData>({
         resolver: zodResolver(updateTeamSchema),
         defaultValues: { ...initialData, id: teamId },
@@ -72,6 +73,8 @@ export const useUpdateTeamForm = (teamId: string, initialData?: Partial<UpdateTe
             }
 
             toast.success("Team updated successfully!");
+            onSuccess?.();
+            reset();
         } catch (error) {
             toast.error("Failed to update team. Please try again later.");
             setError("root", {

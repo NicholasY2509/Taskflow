@@ -1,7 +1,6 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useTeamForm, useUpdateTeamForm } from "@/hooks/useTeamForm";
 import { UpdateTeamFormData } from "@/modules/teams/team.schema";
-import { Plus, Save } from "lucide-react";
 import TeamFormFields from "./team-form-fields";
 
 interface TeamFormProps {
@@ -24,7 +23,7 @@ export default function TeamFormModal({ open, onOpenChange, teamId, initialData 
                 {isUpdate ? (
                     <TeamFormFields
                         mode="update"
-                        hook={() => useUpdateTeamForm(teamId!, initialData)}
+                        hook={() => useUpdateTeamForm(teamId!, initialData, () => onOpenChange(false))}
                         onOpenChange={onOpenChange}
                         submitLabel="Update Team"
                         loadingText="Updating..."
