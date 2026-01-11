@@ -4,31 +4,38 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader } from "lucide-react";
 
-interface ComponentProps {
+interface TeamFormFieldsProps {
     mode: "create" | "update";
-    hook: any;
     onOpenChange: (open: boolean) => void;
-    submitLabel: string;
-    loadingText: string;
+    form: {
+        register: any;
+        handleSubmit: any;
+        errors: any;
+        isSubmitting: boolean;
+        onSubmit: (data: any) => void;
+    };
 }
 
 export default function TeamFormFields({
     mode,
-    hook,
     onOpenChange,
-    submitLabel,
-    loadingText,
-}: ComponentProps) {
+    form,
+}: TeamFormFieldsProps) {
     const {
         register,
         handleSubmit,
         errors,
         isSubmitting,
         onSubmit,
-    } = hook();
+    } = form;
+
+    const isUpdate = mode === "update";
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col space-y-4">
+        <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-col space-y-4"
+        >
             <div>
                 <Label required>Team Name</Label>
                 <Input
@@ -47,21 +54,23 @@ export default function TeamFormFields({
                 />
             </div>
 
-            <div className="flex flex-row gap-2 justify-end">
-                <Button variant="outline" className="" onClick={() => onOpenChange(false)} type="button">
+            <div className="flex justify-end gap-2">
+                <Button
+                    variant="outline"
+                    type="button"
+                    onClick={() => onOpenChange(false)}
+                >
                     Cancel
                 </Button>
 
-                <Button className="" type="submit" disabled={isSubmitting}>
+                <Button type="submit" disabled={isSubmitting}>
                     {isSubmitting ? (
                         <>
                             <Loader className="w-4 h-4 animate-spin mr-2" />
-                            {loadingText}
+                            {isUpdate ? "Updating..." : "Creating..."}
                         </>
                     ) : (
-                        <>
-                            {submitLabel}
-                        </>
+                        isUpdate ? "Update Team" : "Create Team"
                     )}
                 </Button>
             </div>

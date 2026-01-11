@@ -1,8 +1,11 @@
+"use client"
+
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { MoreVertical, Folder, Users } from "lucide-react";
 import { Team } from "@/prisma/generated/client";
+import { useTeams } from "@/context/teams-context";
 
 interface TeamWithCounts extends Team {
     projectCount: number;
@@ -11,10 +14,11 @@ interface TeamWithCounts extends Team {
 
 interface ComponentProps {
     team: TeamWithCounts;
-    onEdit: (team: TeamWithCounts) => void;
 }
 
-export default function TeamCard({ team, onEdit }: ComponentProps) {
+export default function TeamCard({ team }: ComponentProps) {
+    const { openEditModal } = useTeams()
+
     return (
         <Card key={team.id} className="hover:shadow-md transition-shadow cursor-pointer group">
             <CardHeader className="pb-3">
@@ -33,7 +37,7 @@ export default function TeamCard({ team, onEdit }: ComponentProps) {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => onEdit(team)}>Edit Team</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => openEditModal(team)}>Edit Team</DropdownMenuItem>
                             <DropdownMenuItem>Manage Members</DropdownMenuItem>
                             <DropdownMenuItem className="text-destructive">Delete Team</DropdownMenuItem>
                         </DropdownMenuContent>

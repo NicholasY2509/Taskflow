@@ -13,8 +13,8 @@ import {
   Loader2,
 } from "lucide-react";
 import { FloatingInput } from "@/components/ui/floating-input";
-import GithubButton from "@/components/pages/auth/github-button";
-import GoogleButton from "@/components/pages/auth/google-button";
+import GithubButton from "@/components/auth/github-button";
+import GoogleButton from "@/components/auth/google-button";
 import { useSignUpForm } from "@/hooks/useAuthForm";
 import { useRouter } from "next/navigation";
 

@@ -5,37 +5,72 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-export const useTeamForm = ({ onSuccess }: { onSuccess?: () => void } = {}) => {
+type TeamFormMode = "create" | "update";
+
+interface UseTeamFormOptions {
+    mode: TeamFormMode;
+    teamId?: string;
+    initialData?: Partial<UpdateTeamFormData>;
+    onSuccess?: () => void;
+}
+
+export const useTeamForm = ({
+    mode,
+    teamId,
+    initialData,
+    onSuccess,
+}: UseTeamFormOptions) => {
+    const isUpdate = mode === "update";
+
+    const form = useForm<
+        typeof isUpdate extends true
+        ? UpdateTeamFormData
+        : CreateTeamFormData
+    >({
+        resolver: zodResolver(isUpdate ? updateTeamSchema : createTeamSchema),
+        defaultValues: isUpdate
+            ? { ...initialData, id: teamId }
+            : undefined,
+    });
+
     const {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
         setError,
         reset,
-    } = useForm<CreateTeamFormData>({
-        resolver: zodResolver(createTeamSchema),
-    });
+    } = form;
 
-    const onSubmit = async (validatedData: CreateTeamFormData) => {
+    const onSubmit = async (data: any) => {
         try {
-            const result = await createTeamAction(validatedData);
+            const result = isUpdate
+                ? await updateTeamAction(data)
+                : await createTeamAction(data);
 
             if (result?.error) {
                 Object.entries(result.error).forEach(([key, value]) => {
-                    setError(key as any, { type: "manual", message: String(value) });
+                    setError(key as any, {
+                        type: "manual",
+                        message: String(value),
+                    });
                 });
                 return;
             }
 
-            toast.success("Team created successfully!");
+            toast.success(
+                isUpdate
+                    ? "Team updated successfully!"
+                    : "Team created successfully!"
+            );
+
             onSuccess?.();
             reset();
-        } catch (error) {
-            toast.error("Failed to create team. Please try again later.");
-            setError("root", {
-                type: "manual",
-                message: "Failed to create team. Please try again later.",
-            });
+        } catch {
+            toast.error(
+                isUpdate
+                    ? "Failed to update team."
+                    : "Failed to create team."
+            );
         }
     };
 
@@ -46,53 +81,8 @@ export const useTeamForm = ({ onSuccess }: { onSuccess?: () => void } = {}) => {
         isSubmitting,
         onSubmit,
     };
-}
+};
 
-export const useUpdateTeamForm = (teamId: string, initialData?: Partial<UpdateTeamFormData>, onSuccess?: () => void) => {
-    const {
-        register,
-        handleSubmit,
-        formState: { errors, isSubmitting },
-        setError,
-        setValue,
-        reset
-    } = useForm<UpdateTeamFormData>({
-        resolver: zodResolver(updateTeamSchema),
-        defaultValues: { ...initialData, id: teamId },
-    });
-
-    const onSubmit = async (validatedData: UpdateTeamFormData) => {
-        try {
-            const result = await updateTeamAction(validatedData);
-
-            if (result?.error) {
-                Object.entries(result.error).forEach(([key, value]) => {
-                    setError(key as any, { type: "manual", message: String(value) });
-                });
-                return;
-            }
-
-            toast.success("Team updated successfully!");
-            onSuccess?.();
-            reset();
-        } catch (error) {
-            toast.error("Failed to update team. Please try again later.");
-            setError("root", {
-                type: "manual",
-                message: "Failed to update team. Please try again later.",
-            });
-        }
-    };
-
-    return {
-        register,
-        handleSubmit,
-        errors,
-        isSubmitting,
-        onSubmit,
-        setValue,
-    };
-}
 
 export const useDeleteTeam = () => {
     const [isDeleting, setIsDeleting] = useState(false);

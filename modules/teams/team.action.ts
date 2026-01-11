@@ -75,7 +75,6 @@ export async function deleteTeamAction(teamId: string) {
     }
 
     try {
-        // TODO: Check if user has permission to delete team
         await deleteTeamService(teamId);
         revalidatePath("/teams");
         return { success: true };

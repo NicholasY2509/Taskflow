@@ -3,8 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, Search } from "lucide-react";
-import TeamFormModal from "@/components/pages/teams/team-form-modal";
-import { useTeams } from "./teams-context";
+import TeamFormModal from "@/components/teams/team-form-modal";
+import { useTeams } from "../../context/teams-context";
 import { ReactNode } from "react";
 
 export default function TeamsView({ children }: { children: ReactNode }) {
@@ -36,7 +36,6 @@ export default function TeamsView({ children }: { children: ReactNode }) {
                         />
                     </div>
                 </div>
-
                 {children}
             </div>
             <TeamFormModal

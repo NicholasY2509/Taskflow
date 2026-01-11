@@ -2,11 +2,11 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { ArrowRight, Eye, EyeClosed, Lock, Mail, Loader2 } from "lucide-react";
+import { ArrowRight, Eye, EyeClosed, Lock, Mail, Loader2, ChevronLeft } from "lucide-react";
 import { FloatingInput } from "@/components/ui/floating-input";
 import { useState } from "react";
-import GoogleButton from "@/components/pages/auth/google-button";
-import GithubButton from "@/components/pages/auth/github-button";
+import GoogleButton from "@/components/auth/google-button";
+import GithubButton from "@/components/auth/github-button";
 import { useLoginForm } from "@/hooks/useAuthForm";
 
 export default function LoginPage() {
@@ -18,7 +18,11 @@ export default function LoginPage() {
   return (
     <div>
       <div className="flex flex-col mb-7">
+        <Link href="/dashboard" className="p-0 m-0">
+          <Button variant={'link'} className=""><ChevronLeft className="w-4 h-4" /> Go Back</Button>
+        </Link>
         <h1 className="text-4xl font-semibold">Welcome Back!</h1>
+
         <p className="text-sm text-gray-600">We’re happy to see you again</p>
       </div>
 
@@ -69,12 +73,12 @@ export default function LoginPage() {
         </Button>
       </form>
 
-      <p className="text-center text-sm text-gray-600 my-4">or continue with</p>
+      {/* <p className="text-center text-sm text-gray-600 my-4">or continue with</p>
 
       <div className="flex flex-col space-y-2">
         <GoogleButton />
         <GithubButton />
-      </div>
+      </div> */}
 
       <p className="text-center text-sm text-gray-600 mt-4">
         Don’t have an account?{" "}
