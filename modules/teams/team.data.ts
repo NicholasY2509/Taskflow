@@ -2,8 +2,8 @@
 
 import { getTeamsService, getTeamService } from "./team.service";
 
-export async function getTeams() {
-    const teams = await getTeamsService();
+export async function getTeams(query?: string) {
+    const teams = await getTeamsService(query);
 
     return teams.map((team) => ({
         ...team,

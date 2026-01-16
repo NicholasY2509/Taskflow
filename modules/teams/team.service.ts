@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Role } from "@/prisma/generated/client";
 import { getUserByAuthId } from "../users/user.service";
 
-export async function getTeamsService() {
+export async function getTeamsService(query?: string) {
     const supabase = await createClient();
     const { data: { user: authUser }, error } = await supabase.auth.getUser();
 
@@ -26,6 +26,12 @@ export async function getTeamsService() {
                     userId: user.id,
                 },
             },
+            ...(query && {
+                OR: [
+                    { name: { contains: query, mode: "insensitive" } },
+                    { description: { contains: query, mode: "insensitive" } },
+                ],
+            }),
         },
         include: {
             _count: {

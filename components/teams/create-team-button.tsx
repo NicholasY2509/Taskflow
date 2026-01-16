@@ -1,18 +1,27 @@
-"use client"
+"use client";
 
 import { Button } from '../ui/button'
 import { Plus } from 'lucide-react'
-import { useTeams } from '@/context/teams-context'
+import { useState } from 'react'
+import TeamFormModal from './team-form-modal'
 
-const CreateTeamButton = () => {
-    const { openCreateModal } = useTeams()
+export default function CreateTeamButton() {
+    const [isFormOpen, setIsFormOpen] = useState(false)
 
     return (
-        <Button variant="outline" className="h-full min-h-[180px] rounded-lg text-primary hover:bg-primary/5
-                flex flex-col gap-2 border-dashed hover:border-primary" onClick={openCreateModal}>
-            <Plus className="h-8 w-8" />
-            <span>Create New Team</span>
-        </Button>)
-}
+        <>
+            <Button
+                variant="default"
+                onClick={() => setIsFormOpen(true)}
+            >
+                <Plus className="h-8 w-8" />
+                <span>Create New Team</span>
+            </Button>
 
-export default CreateTeamButton
+            <TeamFormModal
+                open={isFormOpen}
+                onOpenChange={setIsFormOpen}
+            />
+        </>
+    )
+}
