@@ -7,6 +7,7 @@ import { MoreVertical, Folder, Users } from "lucide-react";
 import { Team } from "@/prisma/generated/client";
 import { useState } from "react";
 import TeamFormModal from "./team-form-modal";
+import { InviteMemberModal } from "./invite-member-modal";
 
 interface TeamWithCounts extends Team {
     projectCount: number;
@@ -19,6 +20,7 @@ interface ComponentProps {
 
 export default function TeamCard({ team }: ComponentProps) {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
 
     return (
         <>
@@ -40,6 +42,7 @@ export default function TeamCard({ team }: ComponentProps) {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                                 <DropdownMenuItem onClick={() => setIsEditModalOpen(true)}>Edit Team</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => setIsInviteModalOpen(true)}>Invite Member</DropdownMenuItem>
                                 <DropdownMenuItem>Manage Members</DropdownMenuItem>
                                 <DropdownMenuItem className="text-destructive">Delete Team</DropdownMenuItem>
                             </DropdownMenuContent>
@@ -83,6 +86,13 @@ export default function TeamCard({ team }: ComponentProps) {
                     name: team.name,
                     description: team.description || undefined,
                 }}
+            />
+
+            <InviteMemberModal
+                open={isInviteModalOpen}
+                onOpenChange={setIsInviteModalOpen}
+                teamId={team.id}
+                teamName={team.name}
             />
         </>
     )
